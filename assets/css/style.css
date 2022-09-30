@@ -76,6 +76,17 @@
     border-color: #2f2a27;
 }
 
+.btn-outline-white {
+    color: #ffffff;
+    border-color: #ffffff;
+}
+
+.btn-outline-white:hover {
+    color: #fff;
+    background-color: #2f2a27;
+    border-color: #ffffff;
+}
+
 .page-item.active .page-link {
     background-color: #ffffff;
     border-color: #000;
@@ -95,4 +106,15 @@
 
 .form-select:focus {
     box-shadow: none;
+}
+
+.bg-login {
+    background: url(../img/sunsent-bg.jpg);
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+}
+
+.card-login {
+    background: #26303f99;
 }
