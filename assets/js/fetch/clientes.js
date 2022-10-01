@@ -1,34 +1,59 @@
 $(document).ready(function () {
-    var table = $('#tableClientes').DataTable({
-        "ajax": {
-            "url": "http://localhost:8080/api/usuario/cliente",
-            "method": "GET",
-            "headers": {
-                "Authorization": 'Bearer ' + localStorage.token
+    if (!localStorage.token == "") {
+        validarSesion();
+    }else{
+        localStorage.numDocOrEmail = "";
+        localStorage.token = "";
+        location.href = "../login/login.html";
+    }
+
+    let estados = ['<span class="badge bg-success text-white">Active</span>',
+                    '<span class="badge bg-secondary text-white">Inactive</span>',
+                    '<span class="badge bg-danger text-white">Block</span>'];
+
+    var table;
+    function cargarRegistros() {
+        var table = $('#tableClientes').DataTable({
+            "ajax": {
+                "url": "http://localhost:8080/api/usuario/cliente",
+                "method": "GET",
+                "headers": {
+                    "Authorization": 'Bearer ' + localStorage.token
+                },
+                "dataSrc": ""
             },
-            "dataSrc": ""
-        },
-        "columns": [
-            {"data": "idUsuario", className: "align-middle"},
-            {"data": "documento.tipo", className: "align-middle"},
-            {"data": "numDoc", className: "align-middle"},
-            {"data": "nombre", className: "align-middle"},
-            {"data": "apellido", className: "align-middle"},
-            {"data": "email", className: "align-middle"},
-            {"data": "celular", className: "align-middle"},
-            {"defaultContent": '<span class="badge bg-success text-white">Active</span>', className: "align-middle"},
-            {"data": "idUsuario", className: "align-middle", "render": function (data) {
-                return `
-                <button class="btn btn-outline-warning text-xs btn-edit" user-client="`+data+`">
-                    <i class="fa-regular fa-pen-to-square"></i>
-                </button>
-                <button class="btn btn-outline-danger text-xs btn-delete" user-client="`+data+`">
-                    <i class="fa-regular fa-trash"></i>
-                </button>    
-                `;
-            }}
-        ]
-    });
+            "columns": [
+                {"data": "idUsuario", className: "align-middle"},
+                {"data": "documento.tipo", className: "align-middle"},
+                {"data": "numDoc", className: "align-middle"},
+                {"data": "nombre", className: "align-middle"},
+                {"data": "apellido", className: "align-middle"},
+                {"data": "email", className: "align-middle"},
+                {"data": "celular", className: "align-middle"},
+                {"data": "estado", className: "align-middle", "render": function (data) {
+                    switch(data){
+                        case 'Activo':
+                            return estados[0];
+                        case 'Inactivo':
+                            return estados[1];
+                        case 'Bloqueado':
+                            return estados[2];
+                    }
+                }},
+                {"data": "idUsuario", className: "align-middle", "render": function (data) {
+                    return `
+                    <button class="btn btn-outline-warning text-xs btn-edit" user-client="`+data+`">
+                        <i class="fa-regular fa-pen-to-square"></i>
+                    </button>
+                    <button class="btn btn-outline-danger text-xs btn-delete" user-client="`+data+`">
+                        <i class="fa-regular fa-trash"></i>
+                    </button>    
+                    `;
+                }}
+            ]
+        });
+    }               
+    
 
     class Cliente {nombre; apellido; numDoc; fechaNacimiento; email; password; celular; estado;}
 
@@ -43,10 +68,7 @@ $(document).ready(function () {
         });
         if (response.status == 200) {
             let content = await response.json();
-            
             crearEditModal(content);
-        } else {
-            
         }
     });
 
@@ -144,12 +166,12 @@ $(document).ready(function () {
             body: JSON.stringify(cliente)
         });
         if (response.status == 200) {
-            let content = await response.json();
             document.getElementById("btn-modalEditClose").click();
             table.ajax.reload(null, false);
             alertify.success('Editado');
         } else {
-            
+            let content = await response.text();
+            alertify.error(content);
         }
     }
 
@@ -174,8 +196,30 @@ $(document).ready(function () {
         if (response.status == 200) {
             alertify.success('Eliminado');
             table.ajax.reload(null, false);
+        }
+    }
+
+    async function validarSesion() {
+        const response = await fetch('http://localhost:8080/api/usuario', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'text/plain',
+                'Authorization': 'Bearer ' + localStorage.token
+            },
+            body: localStorage.numDocOrEmail
+        });
+        if (response.status == 200) {
+            let content = await response.json();
+            if(content.roles[0].tipo != "ROLE_ADMIN"){
+                localStorage.numDocOrEmail = "";
+                localStorage.token = "";
+                location.href = "../login/login.html";
+            }
+            cargarRegistros();
         } else {
-            
+            localStorage.numDocOrEmail = "";
+            localStorage.token = "";
+            location.href = "../login/login.html";
         }
     }
 });

@@ -1,5 +1,11 @@
 $(document).ready(function () {
-    validarSesion();
+    if (!localStorage.token == "") {
+        validarSesion();
+    }else{
+        localStorage.numDocOrEmail = "";
+        localStorage.token = "";
+        location.href = "./pages/login/login.html";
+    }
 });
 
 async function validarSesion() {
@@ -13,8 +19,14 @@ async function validarSesion() {
     });
     if (response.status == 200) {
         let content = await response.json();
-        console.log(content);
+        if(content.roles[0].tipo != "ROLE_ADMIN"){
+            localStorage.numDocOrEmail = "";
+            localStorage.token = "";
+            location.href = "./pages/login/login.html";
+        }
     } else {
+        localStorage.numDocOrEmail = "";
+        localStorage.token = "";
         location.href = "./pages/login/login.html";
     }
 }

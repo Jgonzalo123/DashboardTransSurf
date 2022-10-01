@@ -1,30 +1,52 @@
 $(document).ready(function () {
+    if (!localStorage.token == "") {
+        validarSesion();
+    }else{
+        localStorage.numDocOrEmail = "";
+        localStorage.token = "";
+        location.href = "../login/login.html";
+    }
 
-    var table = $('#tableCiudad').DataTable({
-        "ajax": {
-            "url": "http://localhost:8080/api/ciudad",
-            "method": "GET",
-            "headers": {
-                "Authorization": 'Bearer ' + localStorage.token
+    let estados = ['<span class="badge bg-success text-white">Active</span>',
+                    '<span class="badge bg-secondary text-white">Inactive</span>'];    
+
+    var table;
+
+    function cargarRegistros() {
+        table = $('#tableCiudad').DataTable({
+            "ajax": {
+                "url": "http://localhost:8080/api/ciudad",
+                "method": "GET",
+                "headers": {
+                    "Authorization": 'Bearer ' + localStorage.token
+                },
+                "dataSrc": ""
             },
-            "dataSrc": ""
-        },
-        "columns": [
-            {"data": "idCiudad", className: "align-middle"},
-            {"data": "nombre", className: "align-middle"},
-            {"defaultContent": '<span class="badge bg-success text-white">Active</span>', className: "align-middle"},
-            {"data": "idCiudad", className: "align-middle", "render": function (data) {
-                return `
-                <button class="btn btn-outline-warning text-xs btn-edit" ciudad-data="`+data+`">
-                    <i class="fa-regular fa-pen-to-square"></i>
-                </button>
-                <button class="btn btn-outline-danger text-xs btn-delete" ciudad-data="`+data+`">
-                    <i class="fa-regular fa-trash"></i>
-                </button>    
-                `;
-            }}
-        ]
-    });
+            "columns": [
+                {"data": "idCiudad", className: "align-middle"},
+                {"data": "nombre", className: "align-middle"},
+                {"data": "estado", className: "align-middle", "render": function (data) {
+                    switch(data){
+                        case 'Activo':
+                            return estados[0];
+                        case 'Inactivo':
+                            return estados[1];
+                    }
+                }},
+                {"data": "idCiudad", className: "align-middle", "render": function (data) {
+                    return `
+                    <button class="btn btn-outline-warning text-xs btn-edit" ciudad-data="`+data+`">
+                        <i class="fa-regular fa-pen-to-square"></i>
+                    </button>
+                    <button class="btn btn-outline-danger text-xs btn-delete" ciudad-data="`+data+`">
+                        <i class="fa-regular fa-trash"></i>
+                    </button>    
+                    `;
+                }}
+            ]
+        });
+    }
+    
 
     class Ciudad {nombre; estado;}
 
@@ -42,12 +64,11 @@ $(document).ready(function () {
             body: JSON.stringify(ciudad)
         });
         if (response.status == 201) {
-            let content = await response.json();
             document.getElementById("btn-modalClose").click();
             table.ajax.reload(null, false);
             alertify.success('Agregado');
         } else {
-            
+            alertify.error('Ciudad Existente');
         }
     }
 
@@ -66,7 +87,6 @@ $(document).ready(function () {
         });
         if (response.status == 200) {
             let content = await response.json();
-            
             crearEditModal(content);
         } else {
             
@@ -133,12 +153,11 @@ $(document).ready(function () {
             body: JSON.stringify(ciudad)
         });
         if (response.status == 200) {
-            let content = await response.json();
             document.getElementById("btn-modalEditClose").click();
             table.ajax.reload(null, false);
             alertify.success('Editado');
         } else {
-            
+            alertify.error('Ciudad Existente');
         }
     }
 
@@ -168,4 +187,27 @@ $(document).ready(function () {
         });
     });
 
+    async function validarSesion() {
+        const response = await fetch('http://localhost:8080/api/usuario', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'text/plain',
+                'Authorization': 'Bearer ' + localStorage.token
+            },
+            body: localStorage.numDocOrEmail
+        });
+        if (response.status == 200) {
+            let content = await response.json();
+            if(content.roles[0].tipo != "ROLE_ADMIN"){
+                localStorage.numDocOrEmail = "";
+                localStorage.token = "";
+                location.href = "../login/login.html";
+            }
+            cargarRegistros();
+        } else {
+            localStorage.numDocOrEmail = "";
+            localStorage.token = "";
+            location.href = "../login/login.html";
+        }
+    }
 });

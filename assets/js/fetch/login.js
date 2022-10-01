@@ -18,7 +18,7 @@ async function iniciarSesion() {
     localStorage.numDocOrEmail = login.numDocOrEmail;
     location.href = "../../index.html";
   } else {
-    
+    alertify.error('Credenciales Invalidas.');
   }
 }
 
