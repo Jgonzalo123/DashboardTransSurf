@@ -12,6 +12,9 @@
         <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v6.0.0-beta1/css/all.css" rel="stylesheet" type="text/css">
         <!-- DataTables -->
         <link href="https://cdn.datatables.net/1.12.1/css/dataTables.bootstrap5.min.css" rel="stylesheet">
+        <!-- Alertify -->
+        <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/alertify.min.css"/>
+        <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/css/themes/default.min.css"/>
         <!-- Style -->
         <link rel="stylesheet" href="../../../assets/css/style.css">
     </head>
@@ -118,6 +121,42 @@
                             <li class="breadcrumb-item active">Unidades</li>
                             <li class="breadcrumb-item active">Buses</li>
                         </ol>
+                        <!-- Botones -->
+                        <div class="mb-4">
+                            <div class="col-auto text-start">
+                                <button type="button" class="btn btn-outline-add text-min text-sm-reg" data-bs-toggle="modal" data-bs-target="#modalUnidad" id="btnAdd">
+                                    <i class="fa-regular fa-plus"></i> Agregar
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- DataTales Example -->
+                        <div class="card shadow mb-4">
+                            <div class="card-header py-3">
+                                <h6 class="m-0 fw-bold text-secondary">Registro de Unidades</h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="table-responsive">
+                                    <table class="table table-hover" id="tableUnidad" width="100%" cellspacing="0">
+                                        <thead class="table-dark">
+                                            <tr>
+                                                <th>Id</th>
+                                                <th>Placa</th>
+                                                <th>Modelo</th>
+                                                <th>Marca</th>
+                                                <th>N° Asientos</th>
+                                                <th>N° Pisos</th>
+                                                <th>Estado</th>
+                                                <th>Acciones</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </main>
                 <footer class="py-4 bg-light mt-auto">
@@ -130,6 +169,57 @@
             </div>
         </div>
 
+        <!-- Modal Personal -->
+        <div class="modal fade" id="modalUnidad" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Agregar Unidad</h5>
+                        <button type="button" class="btn-close" id="btn-modalClose" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row g-2">
+                            <div class="form-floating col-md-6">
+                                <input type="text" class="form-control" id="inputPlaca" placeholder="Placa">
+                                <label for="inputPlaca">Placa</label>
+                            </div>
+                            <div class="col-md-6 d-flex">
+                                <input type="checkbox" class="btn-check" id="checkPisos" checked  autocomplete="off">
+                                <label class="btn btn-outline-secondary w-100 align-self-center" for="checkPisos">2 Pisos</label>
+                            </div>
+                            <div class="form-floating col-md-6">
+                                <input type="number" class="form-control" id="inputNumAsientos" placeholder="N° de Asientos" min="12">
+                                <label for="inputNumAsientos">N° de Asientos</label>
+                            </div>
+                            <div class="form-floating col-md-6">
+                                <select class="form-select" id="selectModelo" aria-label="Modelo">
+                                </select>
+                                <label for="selectModelo">Modelo</label>
+                            </div>
+                            <div class="form-floating col-md-6">
+                                <select class="form-select" id="selectMarca" aria-label="Marca">
+                                </select>
+                                <label for="selectMarca">Marca</label>
+                            </div>
+                            <div class="form-floating col-md-6">
+                                <select class="form-select" id="selectEstado" aria-label="Estado">
+                                    <option value="Activo">Activo</option>
+                                    <option value="Inactivo">Inactivo</option>
+                                </select>
+                                <label for="selectEstado">Estado</label>
+                            </div>
+                            
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">Cerrar</button>
+                        <button type="button" class="btn btn-outline-success" id="btn-addMarca">Agregar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Modal Edit -->
+        <div id="div-edit"></div>
         <!-- Modal Logout -->
         <div class="modal fade" id="logoutModal" tabindex="-1" aria-labelledby="logoutModalLabel" aria-hidden="true">
             <div class="modal-dialog">
@@ -158,6 +248,10 @@
         <!-- DataTables -->
         <script src="https://cdn.datatables.net/1.12.1/js/jquery.dataTables.min.js"></script>
         <script src="https://cdn.datatables.net/1.12.1/js/dataTables.bootstrap5.min.js"></script>
-        <script src="../../../assets/js/datatables.js"></script>
+        <!-- Alertify -->
+        <script src="//cdn.jsdelivr.net/npm/alertifyjs@1.13.1/build/alertify.min.js"></script>
+        <!-- Personal -->
+        <script src="../../../assets/js/fetch/dashboard.js"></script>
+        <script src="../../../assets/js/fetch/buses.js"></script>
     </body>
 </html>

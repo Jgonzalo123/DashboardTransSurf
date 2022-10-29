@@ -9,7 +9,8 @@ $(document).ready(function () {
 
     let estados = ['<span class="badge bg-success text-white">Active</span>',
                     '<span class="badge bg-secondary text-white">Inactive</span>',
-                    '<span class="badge bg-danger text-white">Block</span>'];
+                    '<span class="badge bg-danger text-white">Block</span>',
+                    '<span class="badge bg-primary text-white">Assigned</span>'];
 
     var table;
 
@@ -39,6 +40,8 @@ $(document).ready(function () {
                             return estados[1];
                         case 'Bloqueado':
                             return estados[2];
+                        case 'Asignado':
+                            return estados[3];
                     }
                 }},
                 {"data": "idUsuario", className: "align-middle", "render": function (data) {
@@ -63,11 +66,14 @@ $(document).ready(function () {
         personal.nombre = document.getElementById("inputNombre").value;
         personal.apellido = document.getElementById("inputApellido").value;
         personal.numDoc = document.getElementById("inputNumDoc").value;
-        personal.fechaNacimiento = document.getElementById("inputFechaNacimiento").value;
         personal.email = personal.numDoc + "@transsurf.com";
         personal.password = personal.numDoc;
         personal.celular = document.getElementById("inputCelular").value;
         personal.estado = document.getElementById("selectEstado").value;
+
+        let nacimientoDate = new Date(document.getElementById("inputFechaNacimiento").value);
+
+        personal.fechaNacimiento = nacimientoDate.setDate(nacimientoDate.getDate() + 1);
 
         let doc = document.getElementById("selectDocumento").value;
         let rol = document.getElementById("selectRol").value;
@@ -83,6 +89,7 @@ $(document).ready(function () {
             document.getElementById("btn-modalClose").click();
             table.ajax.reload(null, false);
             alertify.success('Agregado');
+            limpiarCampos();
         } else {
             let content = await response.text();
             alertify.error(content);
@@ -165,6 +172,7 @@ $(document).ready(function () {
                                 <select class="form-select" id="selectEditEstado" aria-label="Estado">
                                     <option value="Activo" `+((personal.estado == "Activo")?'selected':'')+`>Activo</option>
                                     <option value="Inactivo" `+((personal.estado == "Inactivo")?'selected':'')+`>Inactivo</option>
+                                    ${(personal.estado == "Asignado")? '<option value="Asignado" selected>Asignado</option>':''}
                                     <option value="Bloqueado" `+((personal.estado == "Bloqueado")?'selected':'')+`>Bloqueado</option>
                                 </select>
                                 <label for="selectEstado">Estado</label>
@@ -201,11 +209,14 @@ $(document).ready(function () {
         personal.nombre = document.getElementById("inputEditNombre").value;
         personal.apellido = document.getElementById("inputEditApellido").value;
         personal.numDoc = document.getElementById("inputEditNumDoc").value;
-        personal.fechaNacimiento = document.getElementById("inputEditFechaNacimiento").value;
         personal.email = personal.numDoc + "@transsurf.com";
         personal.password = personal.numDoc;
         personal.celular = document.getElementById("inputEditCelular").value;
         personal.estado = document.getElementById("selectEditEstado").value;
+
+        let nacimientoDate = new Date(document.getElementById("inputEditFechaNacimiento").value);
+
+        personal.fechaNacimiento = nacimientoDate.setDate(nacimientoDate.getDate() + 1);
 
         let idUsuario = document.getElementById("inputIdUsuario").value;
         let doc = document.getElementById("selectEditDocumento").value;
@@ -264,6 +275,17 @@ $(document).ready(function () {
             localStorage.token = "";
             location.href = "../login/login.html";
         }
+    }
+
+    function limpiarCampos() {
+        document.getElementById("inputNombre").value = "";
+        document.getElementById("inputApellido").value = "";
+        document.getElementById("inputNumDoc").value = "";
+        document.getElementById("inputCelular").value = "";
+        document.getElementById("selectEstado").selectedIndex = 0;
+        document.getElementById("inputFechaNacimiento").value = "";
+        document.getElementById("selectDocumento").selectedIndex = 0;
+        document.getElementById("selectRol").selectedIndex = 0;
     }
 });
 

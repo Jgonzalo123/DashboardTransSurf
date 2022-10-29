@@ -13,7 +13,7 @@ $(document).ready(function () {
 
     var table;
     function cargarRegistros() {
-        var table = $('#tableClientes').DataTable({
+        table = $('#tableClientes').DataTable({
             "ajax": {
                 "url": "http://localhost:8080/api/usuario/cliente",
                 "method": "GET",
@@ -148,11 +148,14 @@ $(document).ready(function () {
         cliente.nombre = document.getElementById("inputEditNombre").value;
         cliente.apellido = document.getElementById("inputEditApellido").value;
         cliente.numDoc = document.getElementById("inputEditNumDoc").value;
-        cliente.fechaNacimiento = document.getElementById("inputEditFechaNacimiento").value;
         cliente.email = document.getElementById("inputEditEmail").value;
         cliente.password = cliente.numDoc;
         cliente.celular = document.getElementById("inputEditCelular").value;
         cliente.estado = document.getElementById("selectEditEstado").value;
+
+        let nacimientoDate = new Date(document.getElementById("inputEditFechaNacimiento").value);
+
+        cliente.fechaNacimiento = nacimientoDate.setDate(nacimientoDate.getDate() + 1);
 
         let idUsuario = document.getElementById("inputIdUsuario").value;
         let doc = document.getElementById("selectEditDocumento").value;

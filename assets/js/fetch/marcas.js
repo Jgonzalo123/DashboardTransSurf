@@ -65,6 +65,7 @@ $(document).ready(function () {
             document.getElementById("btn-modalClose").click();
             table.ajax.reload(null, false);
             alertify.success('Agregado');
+            limpiarCampos();
         } else {
             alertify.error('Marca Existente');
         }
@@ -203,5 +204,10 @@ $(document).ready(function () {
             localStorage.token = "";
             location.href = "../../login/login.html";
         }
+    }
+
+    function limpiarCampos() {
+        document.getElementById("inputMarca").value = "";
+        document.getElementById("selectEstado").selectedIndex = 0;
     }
 });
