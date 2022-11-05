@@ -30,3 +30,8 @@ async function validarSesion() {
         location.href = "./pages/login/login.html";
     }
 }
+
+document.querySelector('.modal-footer .btn-danger').addEventListener('click', () => {
+    localStorage.clear();
+    location.href = "./pages/login/login.html";
+});

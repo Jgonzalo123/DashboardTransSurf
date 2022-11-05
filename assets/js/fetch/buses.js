@@ -80,7 +80,7 @@ $(document).ready(function () {
             document.getElementById("btn-modalClose").click();
             table.ajax.reload(null, false);
             alertify.success('Agregado');
-            // limpiarCampos();
+            limpiarCampos();
         } else {
             alertify.error('Unidad Existente');
         }
@@ -254,6 +254,11 @@ $(document).ready(function () {
         }
     }
 
+    document.querySelector('.modal-footer .btn-danger').addEventListener('click', () => {
+        localStorage.clear();
+        location.href = "../../login/login.html";
+    });
+
     document.getElementById("btnAdd").addEventListener("click", async() => {
         const selectModelo = document.getElementById("selectModelo");
         cargarModelos(selectModelo);
@@ -315,5 +320,14 @@ $(document).ready(function () {
                 select.add(option);
             });
         }
+    }
+
+    function limpiarCampos() {
+        document.getElementById("inputPlaca").value = "";
+        document.getElementById("inputNumAsientos").value = "";
+        document.getElementById("selectEstado").selectedIndex = 0;
+        document.getElementById("checkPisos").checked = false;
+        document.getElementById("selectModelo").selectedIndex = 0;
+        document.getElementById("selectMarca").selectedIndex = 0;
     }
 });

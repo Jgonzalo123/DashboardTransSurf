@@ -225,4 +225,9 @@ $(document).ready(function () {
             location.href = "../login/login.html";
         }
     }
+
+    document.querySelector('.modal-footer .btn-danger').addEventListener('click', () => {
+        localStorage.clear();
+        location.href = "../login/login.html";
+    });
 });

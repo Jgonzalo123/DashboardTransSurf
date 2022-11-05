@@ -206,6 +206,11 @@ $(document).ready(function () {
         }
     }
 
+    document.querySelector('.modal-footer .btn-danger').addEventListener('click', () => {
+        localStorage.clear();
+        location.href = "../../login/login.html";
+    });
+
     function limpiarCampos() {
         document.getElementById("inputMarca").value = "";
         document.getElementById("selectEstado").selectedIndex = 0;

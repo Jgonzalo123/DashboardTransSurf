@@ -1,3 +1,9 @@
+$(document).ready(function () {
+  if(localStorage.token){
+    location.href = "../../index.html";
+  }
+});
+
 async function iniciarSesion() {
   let login = {
     numDocOrEmail: document.getElementById("iDNIEmail").value,

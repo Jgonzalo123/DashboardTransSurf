@@ -119,7 +119,7 @@ $(document).ready(function () {
                             <div class="form-floating col-12">
                                 <textarea class="form-control" placeholder="Descripción" id="areaEditDescripcion">`+modelo.descripcion+`</textarea>
                                 <label for="areaEditDescripcion">Descripción</label>
-                              </div>
+                            </div>
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -211,6 +211,11 @@ $(document).ready(function () {
             location.href = "../../login/login.html";
         }
     }
+
+    document.querySelector('.modal-footer .btn-danger').addEventListener('click', () => {
+        localStorage.clear();
+        location.href = "../../login/login.html";
+    });
 
     function limpiarCampos() {
         document.getElementById("inputModelo").value = "";

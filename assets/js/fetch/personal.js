@@ -277,6 +277,11 @@ $(document).ready(function () {
         }
     }
 
+    document.querySelector('.modal-footer .btn-danger').addEventListener('click', () => {
+        localStorage.clear();
+        location.href = "../login/login.html";
+    });
+
     function limpiarCampos() {
         document.getElementById("inputNombre").value = "";
         document.getElementById("inputApellido").value = "";

@@ -99,7 +99,7 @@ $(document).ready(function () {
             document.getElementById("btn-modalClose").click();
             table.ajax.reload(null, false);
             alertify.success('Agregado');
-            // limpiarCampos();
+            limpiarCampos();
         } else {
             // alertify.error('Unidad Existente');
         }
@@ -300,6 +300,11 @@ $(document).ready(function () {
         }
     }
 
+    document.querySelector('.modal-footer .btn-danger').addEventListener('click', () => {
+        localStorage.clear();
+        location.href = "../login/login.html";
+    });
+
     document.getElementById("btnAdd").addEventListener("click", async() => {
         const selectUnidad = document.getElementById("selectUnidad");
         cargarUnidades(selectUnidad);
@@ -460,5 +465,11 @@ $(document).ready(function () {
                 }
             });
         }
+    }
+
+    function limpiarCampos() {
+        document.getElementById("inputFecha").value = "";
+        document.getElementById("inputCosto").value = "";
+        document.getElementById("selectEstado").selectedIndex = 0;
     }
 });
