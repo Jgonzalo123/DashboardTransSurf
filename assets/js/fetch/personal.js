@@ -12,6 +12,11 @@ $(document).ready(function () {
                     '<span class="badge bg-danger text-white">Block</span>',
                     '<span class="badge bg-primary text-white">Assigned</span>'];
 
+    let roles = ['<span class="badge bg-dark text-white">Admin</span>',
+                '<span class="badge bg-warning text-dark">Counter</span>',
+                '<span class="badge bg-info text-dark">Driver</span>',
+                '<span class="badge bg-light text-dark">Operator</span>'];
+
     var table;
 
     function cargarRegistros() {
@@ -26,14 +31,26 @@ $(document).ready(function () {
             },
             "columns": [
                 {"data": "idUsuario", className: "align-middle"},
-                {"data": "roles[0].tipo", className: "align-middle"},
+                {"data": "roles", className: "align-middle", "render": function (data) {
+                    const rol = (data[0].idRol != 2)? data[0]:data[1];
+                    switch (rol.idRol) {
+                        case 1:
+                            return roles[0];
+                        case 3:
+                            return roles[1];
+                        case 4:
+                            return roles[2];
+                        case 5:
+                            return roles[3];
+                    }
+                }},
                 {"data": "documento.tipo", className: "align-middle"},
                 {"data": "numDoc", className: "align-middle"},
                 {"data": "nombre", className: "align-middle"},
                 {"data": "apellido", className: "align-middle"},
                 {"data": "celular", className: "align-middle"},
                 {"data": "estado", className: "align-middle", "render": function (data) {
-                    switch(data){
+                    switch (data) {
                         case 'Activo':
                             return estados[0];
                         case 'Inactivo':
@@ -264,7 +281,8 @@ $(document).ready(function () {
         });
         if (response.status == 200) {
             let content = await response.json();
-            if(content.roles[0].tipo != "ROLE_ADMIN"){
+            const pass = (content.roles[0].idRol == 1)? true : (content.roles[1].idRol == 1)? true : false;
+            if(!pass){
                 localStorage.numDocOrEmail = "";
                 localStorage.token = "";
                 location.href = "../login/login.html";

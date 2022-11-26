@@ -27,23 +27,9 @@ $(document).ready(function () {
                 {"data": "unidad.placa", className: "align-middle"},
                 {"data": "origen.ciudad.nombre", className: "align-middle"},
                 {"data": "destino.ciudad.nombre", className: "align-middle"},
-                {"data": "fecha", className: "align-middle", "render": function(data) {
-                    let fecha = new Date(data);
-                    const time = fecha.toLocaleString([],{
-                        day:"2-digit",
-                        month:"2-digit",
-                        year:"numeric"
-                    });
-
-                    return time;
-                }},
-                {"data": "fecha", className: "align-middle", "render": function(data) {
-                    let fecha = new Date(data);
-                    const time = fecha.toLocaleString([],{
-                        hour:"2-digit",
-                        minute:"2-digit"
-                    });
-                    return time;
+                {"data": "fecha", className: "align-middle"},
+                {"data": "hora", className: "align-middle", "render": function(data) {
+                    return data.substring(0,5);
                 }},
                 {"data": "costo", className: "align-middle", "render": function (data) {
                     return 'S/'+ (Math.round(data * 100) / 100).toFixed(2);
@@ -70,7 +56,7 @@ $(document).ready(function () {
         });
     }
 
-    class Programacion {idProgramacion; unidad; origen; destino; fecha; costo; estado}
+    class Programacion {idProgramacion; unidad; origen; destino; fecha; hora; costo; estado}
 
     document.getElementById("btn-addProgramacion").addEventListener('click', () => {
         guardarProgramacion();
@@ -78,7 +64,10 @@ $(document).ready(function () {
 
     async function guardarProgramacion() {
         let programacion = new Programacion();
-        programacion.fecha = new Date(document.getElementById("inputFecha").value);
+        let date = new Date(document.getElementById("inputFecha").value);
+        const hora = date.toLocaleTimeString([],{hour:"2-digit",minute:"2-digit",second:"2-digit"});
+        programacion.fecha = date;
+        programacion.hora = hora;
         programacion.costo = document.getElementById("inputCosto").value;
         programacion.estado = document.getElementById("selectEstado").value;
 
@@ -100,8 +89,6 @@ $(document).ready(function () {
             table.ajax.reload(null, false);
             alertify.success('Agregado');
             limpiarCampos();
-        } else {
-            // alertify.error('Unidad Existente');
         }
     }
 
@@ -126,7 +113,7 @@ $(document).ready(function () {
 
     function crearEditModal(programacion,tripulacion) {
         let modalEdit = "";
-        const vfecha = new Date(new Date(programacion.fecha).toString().split('GMT')[0]+' UTC').toISOString().split('.')[0];
+        const vfecha = new Date(new Date(programacion.fecha+" "+programacion.hora).toString().split('GMT')[0]+' UTC').toISOString().split('.')[0];
         modalEdit += `
         <div class="modal fade" id="modalEditProgramacion" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog">
@@ -223,7 +210,10 @@ $(document).ready(function () {
 
     async function editarProgramacion() {
         let programacion = new Programacion();
-        programacion.fecha = new Date(document.getElementById("inputEditFecha").value);
+        let date = new Date(document.getElementById("inputEditFecha").value);
+        const hora = date.toLocaleTimeString([],{hour:"2-digit",minute:"2-digit",second:"2-digit"});
+        programacion.fecha = date;
+        programacion.hora = hora;
         programacion.costo = document.getElementById("inputEditCosto").value;
         programacion.estado = document.getElementById("selectEditEstado").value;
 
@@ -287,7 +277,8 @@ $(document).ready(function () {
         });
         if (response.status == 200) {
             let content = await response.json();
-            if(content.roles[0].tipo != "ROLE_ADMIN"){
+            const pass = (content.roles[0].idRol == 1)? true : (content.roles[1].idRol == 1)? true : false;
+            if(!pass){
                 localStorage.numDocOrEmail = "";
                 localStorage.token = "";
                 location.href = "../login/login.html";

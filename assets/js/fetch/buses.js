@@ -64,7 +64,7 @@ $(document).ready(function () {
         unidad.placa = document.getElementById("inputPlaca").value;
         unidad.numAsientos = parseInt(document.getElementById("inputNumAsientos").value);
         unidad.estado = document.getElementById("selectEstado").value;
-        unidad.numPisos = (document.getElementById("checkPisos").checked)? 2 : 1;
+        unidad.numPisos = 2;
         let idModelo = document.getElementById("selectModelo").value;
         let idMarca = document.getElementById("selectMarca").value;
 
@@ -117,14 +117,6 @@ $(document).ready(function () {
                                 <input type="text" class="form-control" id="inputEditPlaca" placeholder="Placa" value="`+unidad.placa+`">
                                 <label for="inputEditPlaca">Placa</label>
                             </div>
-                            <div class="col-md-6 d-flex">
-                                <input type="checkbox" class="btn-check" id="checkEditPisos" `+((unidad.numPisos == 2)? 'checked': '')+` autocomplete="off">
-                                <label class="btn btn-outline-secondary w-100 align-self-center" for="checkEditPisos">`+((unidad.numPisos == 2)? '2 Pisos': '1 Piso')+`</label>
-                            </div>
-                            <div class="form-floating col-md-6">
-                                <input type="number" class="form-control" id="inputEditNumAsientos" placeholder="N° de Asientos" min="12" value="`+unidad.numAsientos+`">
-                                <label for="inputEditNumAsientos">N° de Asientos</label>
-                            </div>
                             <div class="form-floating col-md-6">
                                 <select class="form-select" id="selectEditModelo" aria-label="Modelo">
                                 </select>
@@ -134,6 +126,10 @@ $(document).ready(function () {
                                 <select class="form-select" id="selectEditMarca" aria-label="Marca">
                                 </select>
                                 <label for="selectEditMarca">Marca</label>
+                            </div>
+                            <div class="form-floating col-md-6">
+                                <input type="number" class="form-control" id="inputEditNumAsientos" placeholder="N° de Asientos" min="12" value="`+unidad.numAsientos+`" readonly>
+                                <label for="inputEditNumAsientos">N° de Asientos</label>
                             </div>
                             <div class="form-floating col-md-6">
                                 <select class="form-select" id="selectEditEstado" aria-label="Estado">
@@ -162,14 +158,9 @@ $(document).ready(function () {
         const selectMarca = document.getElementById("selectEditMarca");
         cargarMarcas(selectMarca, unidad.marca);
         
-        document.getElementById("checkEditPisos").addEventListener('change', (e) => {
-            if (e.target.checked) {
-                e.target.nextElementSibling. innerText = "2 Pisos";
-                document.getElementById("inputNumAsientos").min = 13;
-            } else {
-                e.target.nextElementSibling. innerText = "1 Piso";
-                document.getElementById("inputNumAsientos").min = 10;
-            }
+        selectModelo.addEventListener("change",(e) => {
+            const numAsientos = (e.target.value == 1)? 38:32;
+            document.getElementById("inputEditNumAsientos").value = numAsientos;
         });
 
         document.getElementById("btn-editUnidad").addEventListener("click", () => {
@@ -182,7 +173,7 @@ $(document).ready(function () {
         unidad.placa = document.getElementById("inputEditPlaca").value;
         unidad.numAsientos = parseInt(document.getElementById("inputEditNumAsientos").value);
         unidad.estado = document.getElementById("selectEditEstado").value;
-        unidad.numPisos = (document.getElementById("checkEditPisos").checked)? 2 : 1;
+        unidad.numPisos = 2;
         let idModelo = document.getElementById("selectEditModelo").value;
         let idMarca = document.getElementById("selectEditMarca").value;
         let idUnidad = document.getElementById("inputIdUnidad").value;
@@ -241,7 +232,8 @@ $(document).ready(function () {
         });
         if (response.status == 200) {
             let content = await response.json();
-            if(content.roles[0].tipo != "ROLE_ADMIN"){
+            const pass = (content.roles[0].idRol == 1)? true : (content.roles[1].idRol == 1)? true : false;
+            if(!pass){
                 localStorage.numDocOrEmail = "";
                 localStorage.token = "";
                 location.href = "../../login/login.html";
@@ -265,14 +257,9 @@ $(document).ready(function () {
         const selectMarca = document.getElementById("selectMarca");
         cargarMarcas(selectMarca);
 
-        document.getElementById("checkPisos").addEventListener('change', (e) => {
-            if (e.target.checked) {
-                e.target.nextElementSibling. innerText = "2 Pisos";
-                document.getElementById("inputNumAsientos").min = 13;
-            } else {
-                e.target.nextElementSibling. innerText = "1 Piso";
-                document.getElementById("inputNumAsientos").min = 10;
-            }
+        selectModelo.addEventListener("change",(e) => {
+            const numAsientos = (e.target.value == 1)? 38:32;
+            document.getElementById("inputNumAsientos").value = numAsientos;
         });
     });
 

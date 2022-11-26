@@ -25,6 +25,7 @@ $(document).ready(function () {
             "columns": [
                 {"data": "idCiudad", className: "align-middle"},
                 {"data": "nombre", className: "align-middle"},
+                {"data": "descripcion", className: "align-middle"},
                 {"data": "estado", className: "align-middle", "render": function (data) {
                     switch(data){
                         case 'Activo':
@@ -48,11 +49,12 @@ $(document).ready(function () {
     }
     
 
-    class Ciudad {nombre; estado;}
+    class Ciudad {nombre; descripcion; estado;}
 
     async function guardarCiudad() {
         let ciudad = new Ciudad();
         ciudad.nombre = document.getElementById("inputCiudad").value;
+        ciudad.descripcion = document.getElementById("areaDescripcion").value;
         ciudad.estado = document.getElementById("selectEstado").value;
 
         const response = await fetch('http://localhost:8080/api/ciudad', {
@@ -116,7 +118,10 @@ $(document).ready(function () {
                                 </select>
                                 <label for="selectEditEstado">Estado</label>
                             </div>
-                            
+                            <div class="form-floating col-12">
+                                <textarea class="form-control" placeholder="Descripcion" id="areaEditDescripcion">`+ciudad.descripcion+`</textarea>
+                                <label for="areaEditDescripcion">Descripcion</label>
+                            </div>
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -139,6 +144,7 @@ $(document).ready(function () {
     async function editarCiudad() {
         let ciudad = new Ciudad();
         ciudad.nombre = document.getElementById("inputEditCiudad").value;
+        ciudad.descripcion = document.getElementById("areaEditDescripcion").value;
         ciudad.estado = document.getElementById("selectEditEstado").value;
 
         let idCiudad = document.getElementById("inputIdCiudad").value;
@@ -197,7 +203,8 @@ $(document).ready(function () {
         });
         if (response.status == 200) {
             let content = await response.json();
-            if(content.roles[0].tipo != "ROLE_ADMIN"){
+            const pass = (content.roles[0].idRol == 1)? true : (content.roles[1].idRol == 1)? true : false;
+            if(!pass){
                 localStorage.numDocOrEmail = "";
                 localStorage.token = "";
                 location.href = "../login/login.html";
