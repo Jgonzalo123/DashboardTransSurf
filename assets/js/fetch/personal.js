@@ -21,6 +21,10 @@ $(document).ready(function () {
 
     function cargarRegistros() {
         table = $('#tablePersonal').DataTable({
+            "dom": 'Bfrtip',
+            buttons: [
+                'excel', 'pdf', 'print'
+            ],
             "ajax": {
                 "url": "http://localhost:8080/api/usuario/personal",
                 "method": "GET",

@@ -9,11 +9,16 @@ $(document).ready(function () {
 
     let estados = ['<span class="badge bg-success text-white">Active</span>',
                     '<span class="badge bg-secondary text-white">Inactive</span>',
-                    '<span class="badge bg-danger text-white">Block</span>'];
+                    '<span class="badge bg-danger text-white">Block</span>',
+                    '<span class="badge bg-dark text-white">Unregistered</span>'];
 
     var table;
     function cargarRegistros() {
         table = $('#tableClientes').DataTable({
+            "dom": 'Bfrtip',
+            buttons: [
+                'excel', 'pdf', 'print'
+            ],
             "ajax": {
                 "url": "http://localhost:8080/api/usuario/cliente",
                 "method": "GET",
@@ -38,6 +43,8 @@ $(document).ready(function () {
                             return estados[1];
                         case 'Bloqueado':
                             return estados[2];
+                        default:
+                            return estados[3];
                     }
                 }},
                 {"data": "idUsuario", className: "align-middle", "render": function (data) {

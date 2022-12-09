@@ -14,8 +14,12 @@ $(document).ready(function () {
 
     function cargarRegistros() {
         table = $('#tableProgramacion').DataTable({
+            "dom": 'Bfrtip',
+            buttons: [
+                'excel', 'pdf', 'print'
+            ],
             "ajax": {
-                "url": "http://localhost:8080/api/programacion",
+                "url": "http://localhost:8080/api/programacion/activo",
                 "method": "GET",
                 "headers": {
                     "Authorization": 'Bearer ' + localStorage.token

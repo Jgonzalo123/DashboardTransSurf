@@ -14,6 +14,10 @@ $(document).ready(function () {
     var table;
     function cargarRegistros() {
         table = $('#tableUnidad').DataTable({
+            "dom": 'Bfrtip',
+            buttons: [
+                'excel', 'pdf', 'print'
+            ],
             "ajax": {
                 "url": "http://localhost:8080/api/unidad",
                 "method": "GET",

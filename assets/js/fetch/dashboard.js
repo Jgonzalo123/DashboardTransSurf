@@ -6,7 +6,25 @@ $(document).ready(function () {
         localStorage.token = "";
         location.href = "./pages/login/login.html";
     }
+
+    firstIndicators();
+
 });
+
+async function firstIndicators() {
+    await fetch('http://localhost:8080/api/indicador/first', {
+        method: 'GET',
+        headers: {
+            'Authorization': 'Bearer ' + localStorage.token
+        }
+    }).then(res => res.json())
+    .then(resp => {
+        document.querySelector("#indEmpleados").innerText = resp.numEmpleados;
+        document.querySelector("#indProgramaciones").innerText = resp.numProgramaciones;
+        document.querySelector("#indIngreso").innerText = "S/"+(resp.ingresoMes).toFixed(2);
+        document.querySelector("#indCiudades").innerText = resp.ciudades;
+    });
+}
 
 async function validarSesion() {
     const response = await fetch('http://localhost:8080/api/usuario', {

@@ -14,6 +14,10 @@ $(document).ready(function () {
 
     function cargarRegistros() {
         table = $('#tableCiudad').DataTable({
+            "dom": 'Bfrtip',
+            buttons: [
+                'excel', 'pdf', 'print'
+            ],
             "ajax": {
                 "url": "http://localhost:8080/api/ciudad",
                 "method": "GET",
@@ -47,7 +51,6 @@ $(document).ready(function () {
             ]
         });
     }
-    
 
     class Ciudad {nombre; descripcion; estado;}
 

@@ -13,6 +13,10 @@ $(document).ready(function () {
     var table;
     function cargarRegistros() {
         table = $('#tableModelo').DataTable({
+            "dom": 'Bfrtip',
+            buttons: [
+                'excel', 'pdf', 'print'
+            ],
             "ajax": {
                 "url": "http://localhost:8080/api/modelo",
                 "method": "GET",
